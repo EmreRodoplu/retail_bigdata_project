@@ -1,0 +1,30 @@
+[project]
+name = "retail-bigdata-project"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+# PRODOCTUION
+dependencies = [
+    "fastapi[standard]>=0.135.2",
+    "joblib>=1.5.3",
+    "lightgbm>=4.6.0",
+    "numpy>=2.2.6",
+    "pandas>=2.3.3",
+    "scikit-learn>=1.7.2",
+    "uvicorn>=0.42.0",
+]
+
+# DEVELOPMENT
+[dependency-groups]
+dev = [
+    "catboost>=1.2.10",
+    "ipykernel>=7.2.0",
+    "optuna>=4.8.0",
+    "polars>=1.39.3",
+    "pyspark>=4.1.1",
+    "seaborn>=0.13.2",
+    "shap>=0.49.1",
+    "xgboost>=3.2.0",
+    "pyarrow>=23.0.1",
+]
