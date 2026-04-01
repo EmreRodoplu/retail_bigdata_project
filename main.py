@@ -4,7 +4,7 @@ import joblib
 import numpy as np
 
 app = FastAPI()
-model = joblib.load("faz1_lightgbm_model.pkl")
+model = joblib.load("lightgbm_model.pkl")
 bagimsiz_degiskenler = [
     'urunklasmankod', 
     'satisadet_lfl_gy',       
