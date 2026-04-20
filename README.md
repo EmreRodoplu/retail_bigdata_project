@@ -64,18 +64,39 @@ LightGBM model dosyası (`lightgbm_model.pkl`) proje dizinine yerleştirilmelidi
 
 ```
 retail_bigdata_project/
-├── main.py                      # FastAPI sunucusu ve tahmin API'si
-├── pyspark_analiz.ipynb         # Jupyter Notebook: Veri analizi ve EDA
-├── pyproject.toml               # Proje bağımlılıkları (uv)
-├── Dockerfile                   # Docker containerı için yapılandırma
-├── Datas/                        # Veri setleri
-│   ├── turkiye.csv
-│   ├── romanya.csv
-│   ├── azerbaycan.csv
-│   ├── kktc.csv
-│   └── libya.csv
-├── lightgbm_model.pkl           # Eğitilmiş LightGBM modeli
-└── README.md                    # Bu dosya
+├── 📋 Backend (API Sunucusu)
+│   ├── main.py                      # FastAPI sunucusu ve tahmin API'si
+│   ├── lightgbm_model.pkl           # Eğitilmiş LightGBM modeli
+│   ├── pyproject.toml               # Proje bağımlılıkları (uv)
+│   ├── uv.lock                      # Sürüm kilitlemesi
+│   ├── Dockerfile                   # Backend containerı
+│   └── .python-version              # Python sürümü belirtimi
+│
+├── 🎨 Frontend (Web Arayüzü)
+│   ├── frontend/
+│   │   ├── index.html               # İnteraktif form arayüzü
+│   │   └── Dockerfile               # Frontend containerı
+│   │
+├── 📊 Veri İşleme & Analiz
+│   ├── pyspark_analiz.ipynb         # Jupyter Notebook: Veri analizi ve EDA
+│   ├── Datas/
+│   │   ├── turkiye.csv              # Türkiye perakende verileri
+│   │   ├── romanya.csv              # Romanya perakende verileri
+│   │   ├── azerbaycan.csv           # Azerbaycan perakende verileri
+│   │   ├── kktc.csv                 # KKTC perakende verileri
+│   │   └── libya.csv                # Libya perakende verileri
+│   │
+├── 📚 Sürüm Kontrol
+│   ├── .git/                        # Git deposu
+│   ├── .github/                     # GitHub Actions
+│   ├── .gitignore                   # Git ignore dosyası
+│   │
+├── 🐍 Çevre
+│   ├── .venv/                       # Sanal ortam
+│   ├── __pycache__/                 # Python cache
+│   │
+└── 📄 Dokümantasyon
+    └── README.md                    # Bu dosya
 ```
 
 ## 🛠️ Bağımlılıklar
@@ -101,31 +122,103 @@ retail_bigdata_project/
 
 ## 💻 Kullanım
 
-### 1. Jupyter Notebook ile Analiz
+### 1. 📊 Jupyter Notebook ile Veri Analizi
 
 ```bash
 uv run jupyter notebook pyspark_analiz.ipynb
 ```
 
-Bu notebook'ta:
+Bu notebook'ta yapılabilecek işlemler:
 - Veri keşfi ve temizleme
 - PySpark ile dağıtık veri işleme
 - Özellik mühendisliği
 - Model eğitimi ve değerlendirmesi
+- Ülkeler arası karşılaştırmalar
 
-### 2. FastAPI Sunucusunu Başlatma
+### 2. 🚀 Backend API Sunucusunu Başlatma
 
 ```bash
-uv run uvicorn main:app --reload
+# Terminal 1: Backend sunucusu
+cd /home/emre/gtu/BIG-DATA/retail_bigdata_project
+uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 Sunucu `http://localhost:8000` adresinde çalışacaktır.
 
-#### API Endpoints
+**API Endpoints:**
 
-- **POST** `/predict` - Satış tahmin endpointi
-  ```json
-  {
+- **POST** `/predict` - Satış tahmin endpointi (JSON payload)
+- **GET** `/docs` - Swagger UI API Dokumentasyonu
+- **GET** `/redoc` - ReDoc interaktif dokumentasyonu
+- **GET** `/openapi.json` - OpenAPI şeması
+
+### 3. 🎨 Frontend Web Arayüzü
+
+**Seçenek A: Yerel Dosya Açma**
+```bash
+# Firefox, Chrome veya Safari'de açın
+open frontend/index.html
+```
+
+**Seçenek B: Live Server ile Çalıştırma (VS Code)**
+1. VS Code'da "Live Server" extension'ı yükleyin
+2. `frontend/index.html` dosyasına sağ tıkla
+3. "Open with Live Server" seçeneğini tıkla
+
+**Seçenek C: Python HTTP Server**
+```bash
+cd frontend
+python3 -m http.server 3000
+# http://localhost:3000 adresinde erişin
+```
+
+Frontend arayüzü, backend API'ye bağlanarak tahmin sonuçları gösterir.
+
+#### Frontend Özellikleri:
+- ✅ Responsive tasarım (mobil uyumlu)
+- ✅ Real-time form doğrulaması
+- ✅ Önceden doldurulmuş test değerleri
+- ✅ Hata yönetimi ve kullanıcı geri bildirimi
+- ✅ CSS Grid tabanlı profesyonel layout
+
+### 4. 🐳 Docker ile Full Stack Çalıştırma
+
+#### Backend Container
+```bash
+# Backend image'ı oluştur
+docker build -t retail-backend:latest .
+
+# Backend container'ı çalıştır
+docker run -p 8000:8000 --name retail-api retail-backend:latest
+```
+
+#### Frontend Container
+```bash
+# Frontend image'ı oluştur
+cd frontend
+docker build -t retail-frontend:latest .
+
+# Frontend container'ı çalıştır
+docker run -p 80:80 --name retail-web retail-frontend:latest
+```
+
+#### Docker Compose (Tüm Sistem)
+```bash
+# Her iki container'ı birlikte çalıştır (gelecek: docker-compose.yml)
+docker-compose up -d
+```
+
+**Sonuç:**
+- Backend API: `http://localhost:8000`
+- Frontend Web: `http://localhost` veya `http://localhost/80`
+
+### 5. 🧪 Test Etme
+
+#### API Test (cURL)
+```bash
+curl -X POST "http://localhost:8000/predict" \
+  -H "Content-Type: application/json" \
+  -d '{
     "urunklasmankod": 101,
     "satisadet_lfl_gy": 5000,
     "indirimorani": 0.15,
@@ -146,36 +239,14 @@ Sunucu `http://localhost:8000` adresinde çalışacaktır.
     "depoyerlesimtip_Index": 1,
     "Haftasonu_Mu": 0,
     "Indirim_x_Haftasonu": 0.0
-  }
-  ```
-
-- **GET** `/docs` - API dokumentasyonu (Swagger UI)
-- **GET** `/redoc` - ReDoc dokumentasyonu
-
-### 3. Docker ile Çalıştırma
-
-```bash
-# Docker image'ı oluştur
-docker build -t retail-bigdata:latest .
-
-# Container'ı çalıştır
-docker run -p 8000:8000 retail-bigdata:latest
-```
-
-Sunucu `http://localhost:8000` adresinde hizmet verecektir.
-
-## 🧪 Test Etme
-
-```bash
-# Tahmin API'sini test et
-curl -X POST "http://localhost:8000/predict" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "urunklasmankod": 101,
-    "satisadet_lfl_gy": 5000,
-    ...
   }'
 ```
+
+#### Web Arayüzü Test
+1. `frontend/index.html` dosyasını tarayıcıda açın
+2. Değerler önceden doldurulmuştur
+3. "Modeli Çalıştır 🚀" düğmesine tıklayın
+4. Tahmin sonucunu görün
 
 ## 📈 Model Performansı
 

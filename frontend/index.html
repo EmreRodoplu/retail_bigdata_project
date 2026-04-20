@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gelişmiş Perakende Tahmin Motoru</title>
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 900px;
+        }
+        h2 { 
+            color: #1a73e8; 
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 30px; 
+            font-size: 26px;
+            border-bottom: 2px solid #e8eaed;
+            padding-bottom: 15px;
+        }
+        
+        /* CSS Grid ile 2 Sütunlu Tasarım */
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .bolum-baslik {
+            font-size: 16px;
+            color: #5f6368;
+            border-bottom: 1px solid #dadce0;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .grup {
+            margin-bottom: 20px;
+        }
+
+        .input-alan {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 12px;
+        }
+
+        .input-alan label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #3c4043;
+            margin-bottom: 6px;
+        }
+
+        .input-alan input, .input-alan select {
+            padding: 10px;
+            border: 1px solid #d5d8dc;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+            background-color: #f8f9fa;
+        }
+
+        .input-alan input:focus, .input-alan select:focus {
+            outline: none;
+            border-color: #1a73e8;
+            background-color: #fff;
+        }
+
+        .buton-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .buton {
+            background-color: #1a73e8;
+            color: white;
+            padding: 14px 40px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .buton:hover { background-color: #1557b0; }
+        .buton:disabled { background-color: #9aa0a6; cursor: not-allowed; }
+
+        .sonuc-ekrani {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e8f0fe;
+            color: #1967d2;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            display: none;
+            text-align: center;
+            border: 1px solid #cce0ff;
+        }
+        .hata { background-color: #fce8e6; color: #c5221f; border-color: #fadcda; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>🛍️ Mağaza Satış & Stok Tahminleme Paneli</h2>
+        
+        <div class="grid-layout">
+            
+            <div>
+                <div class="grup">
+                    <div class="bolum-baslik">🏷️ Ürün & Mağaza Endeksleri</div>
+                    <div class="input-alan">
+                        <label>Ürün Klasman Kodu</label>
+                        <input type="number" id="urunklasmankod" value="101">
+                    </div>
+                    <div class="input-alan">
+                        <label>Ülke Index</label>
+                        <input type="number" id="ulke_Index" value="1">
+                    </div>
+                    <div class="input-alan">
+                        <label>Mağaza Kodu Index</label>
+                        <input type="number" id="magazakod_Index" value="5">
+                    </div>
+                    <div class="input-alan">
+                        <label>Merch Marka Yaş Grup Index</label>
+                        <input type="number" id="merchmarkayasgrupkod_Index" value="2">
+                    </div>
+                    <div class="input-alan">
+                        <label>Merch Alt Grup Index</label>
+                        <input type="number" id="merchaltgrupkod_Index" value="8">
+                    </div>
+                    <div class="input-alan">
+                        <label>Depo Yerleşim Tipi Index</label>
+                        <input type="number" id="depoyerlesimtip_Index" value="1">
+                    </div>
+                </div>
+
+                <div class="grup">
+                    <div class="bolum-baslik">🌡️ Hava Durumu</div>
+                    <div class="input-alan">
+                        <label>Günlük Min Sıcaklık (°C)</label>
+                        <input type="number" step="0.1" id="gunlukminimumsicaklik" value="5.2">
+                    </div>
+                    <div class="input-alan">
+                        <label>Günlük Ort Sıcaklık (°C)</label>
+                        <input type="number" step="0.1" id="gunlukortalamasicaklik" value="12.3">
+                    </div>
+                    <div class="input-alan">
+                        <label>Günlük Max Sıcaklık (°C)</label>
+                        <input type="number" step="0.1" id="gunlukmaksimumsicaklik" value="18.5">
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="grup">
+                    <div class="bolum-baslik">📦 Satış & Stok Metrikleri</div>
+                    <div class="input-alan">
+                        <label>Geçen Yıl LFL Satış Adedi</label>
+                        <input type="number" id="satisadet_lfl_gy" value="5000">
+                    </div>
+                    <div class="input-alan">
+                        <label>İndirim Oranı (%)</label>
+                        <input type="number" step="0.01" id="indirimorani" value="0.15">
+                    </div>
+                    <div class="input-alan">
+                        <label>Gün Sonu Toplam Stok</label>
+                        <input type="number" id="gunsonutoplamstok" value="15000">
+                    </div>
+                    <div class="input-alan">
+                        <label>Gün Sonu Reyon Stok</label>
+                        <input type="number" id="gunsonureyonstok" value="3000">
+                    </div>
+                    <div class="input-alan">
+                        <label>İndirim x Hafta Sonu</label>
+                        <input type="number" step="0.01" id="Indirim_x_Haftasonu" value="0.0">
+                    </div>
+                </div>
+
+                <div class="grup">
+                    <div class="bolum-baslik">📅 Zaman & Takvim</div>
+                    <div class="grid-layout" style="gap:10px; grid-template-columns: 1fr 1fr;">
+                        <div class="input-alan">
+                            <label>Haftanın Günü (1-7)</label>
+                            <input type="number" id="Haftanin_Gunu" value="3" min="1" max="7">
+                        </div>
+                        <div class="input-alan">
+                            <label>Yılın Ayı (1-12)</label>
+                            <input type="number" id="Yilin_Ayi" value="6" min="1" max="12">
+                        </div>
+                        <div class="input-alan">
+                            <label>Yılın Haftası</label>
+                            <input type="number" id="Yilin_Haftasi" value="25" min="1" max="52">
+                        </div>
+                        <div class="input-alan">
+                            <label>Açık Kalma Saati</label>
+                            <input type="number" step="0.5" id="Acik_Kalma_Suresi_Saat" value="14.5">
+                        </div>
+                    </div>
+                    
+                    <div class="grid-layout" style="gap:10px; grid-template-columns: 1fr 1fr; margin-top: 10px;">
+                        <div class="input-alan">
+                            <label>Özel Gün Mü?</label>
+                            <select id="ozelgunflag">
+                                <option value="0">Hayır (0)</option>
+                                <option value="1">Evet (1)</option>
+                            </select>
+                        </div>
+                        <div class="input-alan">
+                            <label>Hafta Sonu Mu?</label>
+                            <select id="Haftasonu_Mu">
+                                <option value="0">Hayır (0)</option>
+                                <option value="1">Evet (1)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="buton-container">
+            <button class="buton" id="submitBtn" onclick="tahminTetikle()">Modeli Çalıştır 🚀</button>
+        </div>
+
+        <div id="sonucAlani" class="sonuc-ekrani"></div>
+    </div>
+
+    <script>
+        async function tahminTetikle() {
+            const sonucAlani = document.getElementById("sonucAlani");
+            const btn = document.getElementById("submitBtn");
+            
+            sonucAlani.style.display = "block";
+            sonucAlani.classList.remove("hata");
+            sonucAlani.innerText = "Model hesaplaması yapılıyor... ⚙️";
+            btn.disabled = true;
+       
+            // Modelin tam olarak beklediği 20 değişkeni topluyoruz
+            const payload = {
+ 
+                "urunklasmankod": parseInt(document.getElementById("urunklasmankod").value) || 0,
+                "satisadet_lfl_gy": parseFloat(document.getElementById("satisadet_lfl_gy").value) || 0,
+                "indirimorani": parseFloat(document.getElementById("indirimorani").value) || 0.0,
+                "gunlukminimumsicaklik": parseFloat(document.getElementById("gunlukminimumsicaklik").value) || 0.0,
+                "gunlukortalamasicaklik": parseFloat(document.getElementById("gunlukortalamasicaklik").value) || 0.0,
+                "gunlukmaksimumsicaklik": parseFloat(document.getElementById("gunlukmaksimumsicaklik").value) || 0.0,
+                "ozelgunflag": parseInt(document.getElementById("ozelgunflag").value) || 0,
+                "gunsonutoplamstok": parseFloat(document.getElementById("gunsonutoplamstok").value) || 0,
+                "gunsonureyonstok": parseFloat(document.getElementById("gunsonureyonstok").value) || 0,
+                "Haftanin_Gunu": parseInt(document.getElementById("Haftanin_Gunu").value) || 1,
+                "Yilin_Ayi": parseInt(document.getElementById("Yilin_Ayi").value) || 1,
+                "Yilin_Haftasi": parseInt(document.getElementById("Yilin_Haftasi").value) || 1,
+                "Acik_Kalma_Suresi_Saat": parseFloat(document.getElementById("Acik_Kalma_Suresi_Saat").value) || 0.0,
+                "ulke_Index": parseInt(document.getElementById("ulke_Index").value) || 0,
+                "magazakod_Index": parseInt(document.getElementById("magazakod_Index").value) || 0,
+                "merchmarkayasgrupkod_Index": parseInt(document.getElementById("merchmarkayasgrupkod_Index").value) || 0,
+                "merchaltgrupkod_Index": parseInt(document.getElementById("merchaltgrupkod_Index").value) || 0,
+                "depoyerlesimtip_Index": parseInt(document.getElementById("depoyerlesimtip_Index").value) || 0,
+                "Haftasonu_Mu": parseInt(document.getElementById("Haftasonu_Mu").value) || 0,
+                "Indirim_x_Haftasonu": parseFloat(document.getElementById("Indirim_x_Haftasonu").value) || 0.0
+            };
+
+            try {
+                
+                const backendURL = "BACKEND_API_URL_YERI/predict";
+                
+
+                const response = await fetch(backendURL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP Hatası: ${response.status}`);
+                }
+
+                const data = await response.json();
+                sonucAlani.innerText = "✅ Başarılı! Tahmin Sonucu:\n" + JSON.stringify(data["predicted_sales"], null, 2);
+                
+            } catch (error) {
+                sonucAlani.classList.add("hata");
+                sonucAlani.innerText = "❌ Hata Oluştu!\n" + error.message;
+            } finally {
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

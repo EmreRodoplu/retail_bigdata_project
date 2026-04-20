@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main  
+    paths-ignore:
+      - 'frontend/**'  
+      - '.github/workflows/frontend-deploy.yml'  
 
 jobs:
   deploy:
@@ -23,4 +26,4 @@ jobs:
           service: retail-bigdata-api
           region: europe-west1
           source: ./
-          flags: '--allow-unauthenticated --memory=2Gi --port=8000'
+          flags: '--allow-unauthenticated --memory=2Gi --port=8000 --set-env-vars FRONTEND_URL=${{ vars.FRONTEND_URL }}'

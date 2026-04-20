@@ -1,9 +1,19 @@
+import os
 from fastapi import FastAPI
 from pydantic import BaseModel
 import joblib
 import numpy as np
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+frontend_url = os.environ.get("FRONTEND_URL", "http://127.0.0.1:5500")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[frontend_url, "http://localhost:5500"],
+    allow_methods=["POST", "OPTIONS"],
+    allow_headers=["Content-Type"],
+)
 model = joblib.load("lightgbm_model.pkl")
 bagimsiz_degiskenler = [
     'urunklasmankod', 
@@ -75,4 +85,4 @@ async def predict(data: InputData):
         data.Indirim_x_Haftasonu
     ]])
     prediction = model.predict(input_array)
-    return {"predicted_sales": prediction[0]}
+    return {"predicted_sales": f"{prediction[0]:.2f}"}

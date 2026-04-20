@@ -1,0 +1,31 @@
+name: Frontend UI Deploy
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'frontend/**' 
+      - '.github/workflows/frontend-deploy.yml'
+
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Kodu Klonla
+        uses: actions/checkout@v4
+
+      - name: 🔐 Google Cloud'a Kimlik Doğrulaması Yap
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+
+      - name: 🚀 Frontend'i Cloud Run'a Deploy Et
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: satis-frontend
+          region: europe-west1
+          source: ./frontend  
+          flags: '--allow-unauthenticated --set-env-vars BACKEND_URL=${{ vars.BACKEND_URL }}' 
