@@ -33,11 +33,19 @@
             padding-bottom: 15px;
         }
         
-        /* CSS Grid ile 2 Sütunlu Tasarım */
         .grid-layout {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 30px;
+        }
+
+        .tam-genislik {
+            grid-column: 1 / -1;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #d5d8dc;
+            margin-bottom: 10px;
         }
         
         .bolum-baslik {
@@ -72,13 +80,19 @@
             border-radius: 6px;
             font-size: 14px;
             transition: border-color 0.2s;
-            background-color: #f8f9fa;
+            background-color: #fff;
+        }
+
+        .model-select {
+            font-weight: bold;
+            color: #1a73e8;
+            cursor: pointer;
+            border: 2px solid #1a73e8 !important;
         }
 
         .input-alan input:focus, .input-alan select:focus {
             outline: none;
             border-color: #1a73e8;
-            background-color: #fff;
         }
 
         .buton-container {
@@ -110,7 +124,7 @@
             color: #1967d2;
             border-radius: 8px;
             font-weight: 600;
-            font-size: 16px;
+            font-size: 18px;
             display: none;
             text-align: center;
             border: 1px solid #cce0ff;
@@ -125,112 +139,63 @@
         
         <div class="grid-layout">
             
+            <div class="tam-genislik">
+                <div class="input-alan" style="margin-bottom: 0;">
+                    <label style="font-size: 15px;">🧠 Tahmin Motorunu (Algoritmayı) Seçin:</label>
+                    <select id="modelSecim" class="model-select">
+                        <option value="lgbm">LightGBM (Hızlı ve Kararlı)</option>
+                        <option value="catboost">CatBoost (Kategorik Veri Uzmanı)</option>
+                        <option value="stacked" selected>Stacked Ensemble (İkisinin Güç Birleşimi)</option>
+                    </select>
+                </div>
+            </div>
+
             <div>
                 <div class="grup">
                     <div class="bolum-baslik">🏷️ Ürün & Mağaza Endeksleri</div>
-                    <div class="input-alan">
-                        <label>Ürün Klasman Kodu</label>
-                        <input type="number" id="urunklasmankod" value="101">
-                    </div>
-                    <div class="input-alan">
-                        <label>Ülke Index</label>
-                        <input type="number" id="ulke_Index" value="1">
-                    </div>
-                    <div class="input-alan">
-                        <label>Mağaza Kodu Index</label>
-                        <input type="number" id="magazakod_Index" value="5">
-                    </div>
-                    <div class="input-alan">
-                        <label>Merch Marka Yaş Grup Index</label>
-                        <input type="number" id="merchmarkayasgrupkod_Index" value="2">
-                    </div>
-                    <div class="input-alan">
-                        <label>Merch Alt Grup Index</label>
-                        <input type="number" id="merchaltgrupkod_Index" value="8">
-                    </div>
-                    <div class="input-alan">
-                        <label>Depo Yerleşim Tipi Index</label>
-                        <input type="number" id="depoyerlesimtip_Index" value="1">
-                    </div>
+                    <div class="input-alan"><label>Ürün Klasman Kodu</label><input type="number" id="urunklasmankod" value="101"></div>
+                    <div class="input-alan"><label>Ülke Index</label><input type="number" id="ulke_Index" value="1"></div>
+                    <div class="input-alan"><label>Mağaza Kodu Index</label><input type="number" id="magazakod_Index" value="5"></div>
+                    <div class="input-alan"><label>Merch Marka Yaş Grup Index</label><input type="number" id="merchmarkayasgrupkod_Index" value="2"></div>
+                    <div class="input-alan"><label>Merch Alt Grup Index</label><input type="number" id="merchaltgrupkod_Index" value="8"></div>
+                    <div class="input-alan"><label>Depo Yerleşim Tipi Index</label><input type="number" id="depoyerlesimtip_Index" value="1"></div>
                 </div>
 
                 <div class="grup">
                     <div class="bolum-baslik">🌡️ Hava Durumu</div>
-                    <div class="input-alan">
-                        <label>Günlük Min Sıcaklık (°C)</label>
-                        <input type="number" step="0.1" id="gunlukminimumsicaklik" value="5.2">
-                    </div>
-                    <div class="input-alan">
-                        <label>Günlük Ort Sıcaklık (°C)</label>
-                        <input type="number" step="0.1" id="gunlukortalamasicaklik" value="12.3">
-                    </div>
-                    <div class="input-alan">
-                        <label>Günlük Max Sıcaklık (°C)</label>
-                        <input type="number" step="0.1" id="gunlukmaksimumsicaklik" value="18.5">
-                    </div>
+                    <div class="input-alan"><label>Günlük Min Sıcaklık (°C)</label><input type="number" step="0.1" id="gunlukminimumsicaklik" value="5.2"></div>
+                    <div class="input-alan"><label>Günlük Ort Sıcaklık (°C)</label><input type="number" step="0.1" id="gunlukortalamasicaklik" value="12.3"></div>
+                    <div class="input-alan"><label>Günlük Max Sıcaklık (°C)</label><input type="number" step="0.1" id="gunlukmaksimumsicaklik" value="18.5"></div>
                 </div>
             </div>
 
             <div>
                 <div class="grup">
                     <div class="bolum-baslik">📦 Satış & Stok Metrikleri</div>
-                    <div class="input-alan">
-                        <label>Geçen Yıl LFL Satış Adedi</label>
-                        <input type="number" id="satisadet_lfl_gy" value="5000">
-                    </div>
-                    <div class="input-alan">
-                        <label>İndirim Oranı (%)</label>
-                        <input type="number" step="0.01" id="indirimorani" value="0.15">
-                    </div>
-                    <div class="input-alan">
-                        <label>Gün Sonu Toplam Stok</label>
-                        <input type="number" id="gunsonutoplamstok" value="15000">
-                    </div>
-                    <div class="input-alan">
-                        <label>Gün Sonu Reyon Stok</label>
-                        <input type="number" id="gunsonureyonstok" value="3000">
-                    </div>
-                    <div class="input-alan">
-                        <label>İndirim x Hafta Sonu</label>
-                        <input type="number" step="0.01" id="Indirim_x_Haftasonu" value="0.0">
-                    </div>
+                    <div class="input-alan"><label>Geçen Yıl LFL Satış Adedi</label><input type="number" id="satisadet_lfl_gy" value="5000"></div>
+                    <div class="input-alan"><label>İndirim Oranı (%)</label><input type="number" step="0.01" id="indirimorani" value="0.15"></div>
+                    <div class="input-alan"><label>Gün Sonu Toplam Stok</label><input type="number" id="gunsonutoplamstok" value="15000"></div>
+                    <div class="input-alan"><label>Gün Sonu Reyon Stok</label><input type="number" id="gunsonureyonstok" value="3000"></div>
+                    <div class="input-alan"><label>İndirim x Hafta Sonu</label><input type="number" step="0.01" id="Indirim_x_Haftasonu" value="0.0"></div>
                 </div>
 
                 <div class="grup">
                     <div class="bolum-baslik">📅 Zaman & Takvim</div>
                     <div class="grid-layout" style="gap:10px; grid-template-columns: 1fr 1fr;">
-                        <div class="input-alan">
-                            <label>Haftanın Günü (1-7)</label>
-                            <input type="number" id="Haftanin_Gunu" value="3" min="1" max="7">
-                        </div>
-                        <div class="input-alan">
-                            <label>Yılın Ayı (1-12)</label>
-                            <input type="number" id="Yilin_Ayi" value="6" min="1" max="12">
-                        </div>
-                        <div class="input-alan">
-                            <label>Yılın Haftası</label>
-                            <input type="number" id="Yilin_Haftasi" value="25" min="1" max="52">
-                        </div>
-                        <div class="input-alan">
-                            <label>Açık Kalma Saati</label>
-                            <input type="number" step="0.5" id="Acik_Kalma_Suresi_Saat" value="14.5">
-                        </div>
+                        <div class="input-alan"><label>Haftanın Günü (1-7)</label><input type="number" id="Haftanin_Gunu" value="3" min="1" max="7"></div>
+                        <div class="input-alan"><label>Yılın Ayı (1-12)</label><input type="number" id="Yilin_Ayi" value="6" min="1" max="12"></div>
+                        <div class="input-alan"><label>Yılın Haftası</label><input type="number" id="Yilin_Haftasi" value="25" min="1" max="52"></div>
+                        <div class="input-alan"><label>Açık Kalma Saati</label><input type="number" step="0.5" id="Acik_Kalma_Suresi_Saat" value="14.5"></div>
                     </div>
                     
                     <div class="grid-layout" style="gap:10px; grid-template-columns: 1fr 1fr; margin-top: 10px;">
                         <div class="input-alan">
                             <label>Özel Gün Mü?</label>
-                            <select id="ozelgunflag">
-                                <option value="0">Hayır (0)</option>
-                                <option value="1">Evet (1)</option>
-                            </select>
+                            <select id="ozelgunflag"><option value="0">Hayır (0)</option><option value="1">Evet (1)</option></select>
                         </div>
                         <div class="input-alan">
                             <label>Hafta Sonu Mu?</label>
-                            <select id="Haftasonu_Mu">
-                                <option value="0">Hayır (0)</option>
-                                <option value="1">Evet (1)</option>
-                            </select>
+                            <select id="Haftasonu_Mu"><option value="0">Hayır (0)</option><option value="1">Evet (1)</option></select>
                         </div>
                     </div>
                 </div>
@@ -249,15 +214,14 @@
         async function tahminTetikle() {
             const sonucAlani = document.getElementById("sonucAlani");
             const btn = document.getElementById("submitBtn");
+            const secilenModel = document.getElementById("modelSecim").value;
             
             sonucAlani.style.display = "block";
             sonucAlani.classList.remove("hata");
-            sonucAlani.innerText = "Model hesaplaması yapılıyor... ⚙️";
+            sonucAlani.innerHTML = "Model hesaplaması yapılıyor... ⚙️";
             btn.disabled = true;
        
-            // Modelin tam olarak beklediği 20 değişkeni topluyoruz
             const payload = {
- 
                 "urunklasmankod": parseInt(document.getElementById("urunklasmankod").value) || 0,
                 "satisadet_lfl_gy": parseFloat(document.getElementById("satisadet_lfl_gy").value) || 0,
                 "indirimorani": parseFloat(document.getElementById("indirimorani").value) || 0.0,
@@ -281,10 +245,18 @@
             };
 
             try {
+                // 1. ADIM: Varsayılan olarak Pipeline'ın değiştireceği bulut adresini belirliyoruz
+                let temelURL = "BACKEND_API_URL_YERI/predict";
                 
-                const backendURL = "BACKEND_API_URL_YERI/predict";
-                
+                // 2. ADIM: EĞER LOKALDEYSEK (Otomatik Algılama), adresi 8000 portuna çekiyoruz
+                if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+                    temelURL = "http://localhost:8000/predict";
+                    console.log("Lokal ortam algılandı. API şuraya yönlendiriliyor:", temelURL);
+                }
 
+                // 3. ADIM: Kullanıcının seçtiği modeli URL'nin sonuna ekliyoruz
+                const backendURL = temelURL + "/" + secilenModel;
+                
                 const response = await fetch(backendURL, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -292,15 +264,16 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error(`HTTP Hatası: ${response.status}`);
+                    throw new Error(`Sunucu Hatası: ${response.status}`);
                 }
 
                 const data = await response.json();
-                sonucAlani.innerText = "✅ Başarılı! Tahmin Sonucu:\n" + JSON.stringify(data["predicted_sales"], null, 2);
+                
+                sonucAlani.innerHTML = `✅ <b>Tahmin Edilen Satış:</b> ${data.predicted_sales} Adet <br><small style="color:#555;">(Kullanılan Algoritma: ${secilenModel.toUpperCase()})</small>`;
                 
             } catch (error) {
                 sonucAlani.classList.add("hata");
-                sonucAlani.innerText = "❌ Hata Oluştu!\n" + error.message;
+                sonucAlani.innerText = "❌ Bağlantı veya Sunucu Hatası!\n" + error.message;
             } finally {
                 btn.disabled = false;
             }

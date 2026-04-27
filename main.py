@@ -8,7 +8,7 @@ from google.cloud import storage
 
 app = FastAPI(title="Retail Sales Prediction API")
 
-FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:5500")
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://127.0.0.1:5500")
 BUCKET_NAME = os.environ.get("MODEL_BUCKET", "satis-modelleri")
 LGBM_FILE = os.environ.get("LGBM_FILE", "lightgbm_model.pkl")
 CATBOOST_FILE = os.environ.get("CATBOOST_FILE", "catboost_model.pkl")
