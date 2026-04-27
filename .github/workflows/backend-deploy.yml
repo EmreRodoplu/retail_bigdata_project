@@ -26,4 +26,4 @@ jobs:
           service: retail-bigdata-api
           region: europe-west1
           source: ./
-          flags: '--allow-unauthenticated --memory=2Gi --port=8000 --set-env-vars FRONTEND_URL=${{ vars.FRONTEND_URL }}'
+          flags: '--allow-unauthenticated --memory=2Gi --port=8000 --set-env-vars FRONTEND_URL=${{ vars.FRONTEND_URL }} MODEL_BUCKET=${{ vars.MODEL_BUCKET }},LGBM_FILE=${{ vars.LGBM_FILE }},CATBOOST_FILE=${{ vars.CATBOOST_FILE }}'

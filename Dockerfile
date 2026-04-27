@@ -13,7 +13,7 @@ COPY pyproject.toml uv.lock ./
 # Bağımlılıkları yüklemek için uv kullanıyoruz
 RUN uv sync --frozen --no-dev
 # Model dosyasını ve uygulama kodunu konteynera kopyalıyoruz
-COPY lightgbm_model.pkl main.py ./
+COPY main.py ./
 # Uygulamanın çalışacağı portu açıyoruz
 EXPOSE 8000
 # Uvicorn'u kullanarak FastAPI uygulamasını başlatıyoruz

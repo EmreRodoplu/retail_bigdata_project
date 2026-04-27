@@ -13,12 +13,14 @@ dependencies = [
     "pandas>=2.3.3",
     "scikit-learn>=1.7.2",
     "uvicorn>=0.42.0",
+    "catboost>=1.2.10",
+    "google-cloud-storage>=3.10.1",
+    "pydantic>=2.12.5",
 ]
 
 # DEVELOPMENT
 [dependency-groups]
 dev = [
-    "catboost>=1.2.10",
     "ipykernel>=7.2.0",
     "optuna>=4.8.0",
     "polars>=1.39.3",
