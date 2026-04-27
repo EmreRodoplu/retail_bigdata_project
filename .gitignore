@@ -10,3 +10,4 @@ wheels/
 .venv
 Datas/
 catboost_info/
+*.pkl
