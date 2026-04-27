@@ -28,7 +28,7 @@ def load_model_from_gcs(bucket_name, file_name):
         except Exception as e:
             print(f"Model yüklenirken hata oluştu: {e}")
             return None
-    path = f"tmp/{file_name}"
+    path = f"/tmp/{file_name}"
     try:
         client = storage.Client()
         bucket = client.bucket(bucket_name)
@@ -156,4 +156,4 @@ async def predict_stacked(data: InputData):
     lgbm_pred = lgbm_model.predict(input_array)
     catboost_pred = catboost_model.predict(input_array)
     stacked_pred = (lgbm_pred + catboost_pred) / 2
-    return {"predicted_sales": f"{stacked_pred:.2f}"}
+    return {"predicted_sales": f"{stacked_pred[0]:.2f}"}
